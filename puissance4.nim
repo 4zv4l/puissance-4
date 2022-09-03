@@ -1,11 +1,12 @@
-import os
-import nre
-import strutils
-import rdstdin
+import os # shellcmd
+import nre # reg.contains
+import strutils # str.contains
+import rdstdin # get user input
 
 # column length
 const length = 7
 
+# board data structure
 type
   Column = object
     free: uint
@@ -16,6 +17,8 @@ type
 let p1 = "\e[31mO\e[0m"
 let p2 = "\e[36mO\e[0m"
 
+# clear the screen using
+# a shell command
 template clear() =
   if defined(windows): discard execShellCmd("cls")
   discard execShellCmd("clear")
@@ -27,6 +30,7 @@ proc initBoard(): Board =
     for c in column.content.mitems:
       c = "."
 
+# convert the board to a one line string
 proc to_string(b: Board): string =
   var rep: string
   for i in countup(0, length-1):
@@ -47,6 +51,8 @@ proc add(column: uint, player: string, board: var Board): bool =
   col.free -= 1
   return true
 
+# show the formatted board
+# to the screen
 proc show(b: Board) =
   clear()
   for i in countup(0, length-1):
@@ -56,7 +62,7 @@ proc show(b: Board) =
     echo ""
   echo "-1-2-3-4-5-6-7-"
 
-# TODO: check for winner
+# check for winner
 proc checkWinner(board: Board, round: uint): bool =
   defer: board.show()
   if round == 7*7:
