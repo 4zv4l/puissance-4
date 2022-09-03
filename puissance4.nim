@@ -19,12 +19,14 @@ template clear() =
   if defined(windows): discard execShellCmd("cls")
   discard execShellCmd("clear")
 
+# set all the case of the board to a '.'
 proc initBoard(): Board = 
   for column in result.mitems:
     column.free = length
     for c in column.content.mitems:
       c = "."
 
+# add player to the column if possible
 proc add(column: uint, player: string, board: var Board): bool =
   var 
     col = addr board[column-1]
@@ -54,6 +56,8 @@ proc checkWinner(board: Board, round: uint): bool =
   # check for diagonal winner
   return false
 
+# ask user for a column
+# between 1 and 7
 proc getCol(p: string): uint =
   var column: uint = 0
   while column == 0:
