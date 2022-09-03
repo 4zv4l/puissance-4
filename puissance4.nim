@@ -114,8 +114,11 @@ proc main() =
     if add(column, p, board) == false: continue
     round += 1
 
+proc pause() = discard readLineFromStdin("Press Enter to continue")
+
 try:
   main()
+  when defined(windows): pause()
 except CatchableError as e:
   # doesn't show error message xD
   discard
