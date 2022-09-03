@@ -115,6 +115,8 @@ proc main() =
     round += 1
 
 proc pause() = discard readLineFromStdin("Press Enter to continue")
+## pause the program preventing the cmd 
+## to quit without showing the winner
 
 try:
   main()
