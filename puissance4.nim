@@ -1,38 +1,35 @@
-import os # shellcmd
-import nre # reg.contains
-import strutils # str.contains
-import rdstdin # get user input
+import os  ## shellcmd
+import nre  ## reg.contains
+import strutils  ## str.contains
+import rdstdin  ## get user input
 
-# column length
-const length = 7
+const length* = 7 ## column length
 
-# board data structure
 type
-  Column = object
+  Column* = object ## Column data structure
     free: uint
     content: array[length, string]
-  Board = array[length, Column] 
+  Board* = array[length, Column] ## Board data structure
 
-# player colored icons
-let p1 = "\e[31mO\e[0m"
-let p2 = "\e[36mO\e[0m"
+let p1* = "\e[31mO\e[0m" ## Player 1's icon (red)
+let p2* = "\e[36mO\e[0m" ## Player 2's icon (blue)
 
-# clear the screen using
-# a shell command
 template clear() =
+  ## clear the screen using
+  ## a shell command
   if defined(windows): discard execShellCmd("cls")
   discard execShellCmd("clear")
 
-# set all the case of the board to a '.'
-proc initBoard(): Board = 
+proc initBoard*(): Board = 
+  ## set all the case of the board to a '.'
   for column in result.mitems:
     column.free = length
     for c in column.content.mitems:
       c = "."
 
-# show the formatted board
-# to the screen
-proc show(b: Board) =
+proc show*(b: Board) =
+  ## show the formatted board
+  ## to the screen
   clear()
   for i in countup(0, length-1):
     stdout.write "|"
@@ -41,8 +38,8 @@ proc show(b: Board) =
     echo ""
   echo "-1-2-3-4-5-6-7-"
 
-# add player to the column if possible
-proc add(column: uint, player: string, board: var Board): bool =
+proc add*(column: uint, player: string, board: var Board): bool =
+  ## add player to the column if possible
   var 
     col = addr board[column-1]
     busy = length-col.free
@@ -51,8 +48,8 @@ proc add(column: uint, player: string, board: var Board): bool =
   col.free -= 1
   return true
 
-# convert the board to a one line string
-proc to_string(b: Board): string =
+proc to_string*(b: Board): string =
+  ## convert the board to a one line string
   var rep: string
   for i in countup(0, length-1):
     for j in countup(0, length-1):
@@ -62,8 +59,8 @@ proc to_string(b: Board): string =
       if c == p2: rep = rep & "2"
   return rep
 
-# check for winner
-proc checkWinner(board: Board, round: uint): bool =
+proc checkWinner*(board: Board, round: uint): bool =
+  ## check for winner (horizontal, vertical, diagonal)
   defer: board.show()
   if round == 7*7:
     defer: echo "no winner..."
@@ -90,9 +87,9 @@ proc checkWinner(board: Board, round: uint): bool =
   if rep.contains(re"(.{5}2){4}"): return true
   return false
 
-# ask user for a column
-# between 1 and 7
-proc getCol(p: string): uint =
+proc getCol*(p: string): uint =
+  ## ask user for a column
+  ## between 1 and 7
   var column: uint = 0
   while column == 0:
     let input = readLineFromStdin(p & " which column(1-7): ")
@@ -105,6 +102,7 @@ proc getCol(p: string): uint =
   return column
 
 proc main() =
+  ## main loop
   var board = initBoard()
   let ps = [p1, p2]
   var round: uint = 0
