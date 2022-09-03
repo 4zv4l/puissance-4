@@ -30,27 +30,6 @@ proc initBoard(): Board =
     for c in column.content.mitems:
       c = "."
 
-# convert the board to a one line string
-proc to_string(b: Board): string =
-  var rep: string
-  for i in countup(0, length-1):
-    for j in countup(0, length-1):
-      let c = b[j].content[i]
-      if c == ".": rep = rep & "0"
-      if c == p1: rep = rep & "1"
-      if c == p2: rep = rep & "2"
-  return rep
-
-# add player to the column if possible
-proc add(column: uint, player: string, board: var Board): bool =
-  var 
-    col = addr board[column-1]
-    busy = length-col.free
-  if col.free == 0: return false
-  col.content[length-busy-1] = player
-  col.free -= 1
-  return true
-
 # show the formatted board
 # to the screen
 proc show(b: Board) =
@@ -62,6 +41,27 @@ proc show(b: Board) =
     echo ""
   echo "-1-2-3-4-5-6-7-"
 
+# add player to the column if possible
+proc add(column: uint, player: string, board: var Board): bool =
+  var 
+    col = addr board[column-1]
+    busy = length-col.free
+  if col.free == 0: return false
+  col.content[length-busy-1] = player
+  col.free -= 1
+  return true
+
+# convert the board to a one line string
+proc to_string(b: Board): string =
+  var rep: string
+  for i in countup(0, length-1):
+    for j in countup(0, length-1):
+      let c = b[j].content[i]
+      if c == ".": rep = rep & "0"
+      if c == p1: rep = rep & "1"
+      if c == p2: rep = rep & "2"
+  return rep
+
 # check for winner
 proc checkWinner(board: Board, round: uint): bool =
   defer: board.show()
@@ -70,15 +70,24 @@ proc checkWinner(board: Board, round: uint): bool =
     return true
   # put the whole array on a one dimension array (string here)
   var rep: string = board.to_string()
-  # check for vertical winner
+  # check for horizontal winner
   if rep.contains("1111"): return true
   if rep.contains("2222"): return true
-  # check for horizontal winner
+  # check for vertical winner
   if rep.contains(re"(1.{6}){4}"): return true
+  if rep.contains(re"(.{6}1){4}"): return true
   if rep.contains(re"(2.{6}){4}"): return true
-  # check for diagonal winner
+  if rep.contains(re"(.{6}2){4}"): return true
+  # check for diagonal \ winner
+  if rep.contains(re"(1.{7}){4}"): return true
+  if rep.contains(re"(.{7}1){4}"): return true
+  if rep.contains(re"(2.{7}){4}"): return true
+  if rep.contains(re"(.{7}2){4}"): return true
+  # check for diagonal / winner
   if rep.contains(re"(1.{5}){4}"): return true
-  if rep.contains(re"(1.{5}){4}"): return true
+  if rep.contains(re"(.{5}1){4}"): return true
+  if rep.contains(re"(2.{5}){4}"): return true
+  if rep.contains(re"(.{5}2){4}"): return true
   return false
 
 # ask user for a column
