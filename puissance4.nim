@@ -1,7 +1,6 @@
 import os  ## shellcmd
 import nre  ## reg.contains
 import strutils  ## str.contains
-import rdstdin  ## get user input
 
 const length* = 7 ## column length
 
@@ -94,7 +93,8 @@ proc getCol*(p: string): uint =
   ## between 1 and 7
   var column: uint = 0
   while column == 0:
-    let input = readLineFromStdin(p & " which column(1-7): ")
+    stdout.write p & " which column(1-7): "
+    let input = readline(stdin)
     try:
       column = parseUInt(input)
       if column < 1 or column > 7:
@@ -116,7 +116,7 @@ proc main() =
     if add(column, p, board) == false: continue
     round += 1
 
-proc pause() = discard readLineFromStdin("Press Enter to continue")
+proc pause() = echo "Press Enter to continue"; discard readline(stdin)
 ## pause the program preventing the cmd 
 ## to quit without showing the winner
 
