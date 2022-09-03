@@ -1,4 +1,5 @@
 import os
+import nre
 import strutils
 import rdstdin
 
@@ -26,6 +27,16 @@ proc initBoard(): Board =
     for c in column.content.mitems:
       c = "."
 
+proc to_string(b: Board): string =
+  var rep: string
+  for i in countup(0, length-1):
+    for j in countup(0, length-1):
+      let c = b[j].content[i]
+      if c == ".": rep = rep & "0"
+      if c == p1: rep = rep & "1"
+      if c == p2: rep = rep & "2"
+  return rep
+
 # add player to the column if possible
 proc add(column: uint, player: string, board: var Board): bool =
   var 
@@ -47,13 +58,21 @@ proc show(b: Board) =
 
 # TODO: check for winner
 proc checkWinner(board: Board, round: uint): bool =
+  defer: board.show()
   if round == 7*7:
-    board.show()
-    echo "no winner..."
+    defer: echo "no winner..."
     return true
+  # put the whole array on a one dimension array (string here)
+  var rep: string = board.to_string()
   # check for vertical winner
+  if rep.contains("1111"): return true
+  if rep.contains("2222"): return true
   # check for horizontal winner
+  if rep.contains(re"(1.{6}){4}"): return true
+  if rep.contains(re"(2.{6}){4}"): return true
   # check for diagonal winner
+  if rep.contains(re"(1.{5}){4}"): return true
+  if rep.contains(re"(1.{5}){4}"): return true
   return false
 
 # ask user for a column
