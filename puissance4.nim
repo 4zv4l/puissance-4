@@ -61,10 +61,12 @@ proc to_string*(b: Board): string =
 
 proc checkWinner*(board: Board, round: uint): bool =
   ## check for winner (horizontal, vertical, diagonal)
-  defer: board.show()
   if round == 7*7:
-    defer: echo "no winner..."
+    defer: 
+      board.show()
+      echo "no winner..."
     return true
+  defer: board.show()
   # put the whole array on a one dimension array (string here)
   var rep: string = board.to_string()
   # check for horizontal winner
