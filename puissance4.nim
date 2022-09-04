@@ -5,10 +5,10 @@ import strutils  ## str.contains
 const length = 7 ## column length
 
 type
-  Column = object ## Column data structure
+  Column = object
     free: uint
     content: array[length, string]
-  Board = array[length, Column] ## Board data structure
+  Board = array[length, Column]
 
 let p1 = "\e[31mO\e[0m" ## Player 1's icon (red)
 let p2 = "\e[36mO\e[0m" ## Player 2's icon (blue)
@@ -104,7 +104,6 @@ proc getCol(p: string): uint =
   return column
 
 proc main() =
-  ## main loop
   var board = initBoard()
   let ps = [p1, p2]
   var round: uint = 0
