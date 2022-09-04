@@ -69,23 +69,13 @@ proc checkWinner(board: Board, round: uint): bool =
   # put the whole array on a one dimension array (string here)
   var rep: string = board.to_string()
   # check for horizontal winner
-  if rep.contains("1111"): return true
-  if rep.contains("2222"): return true
+  if rep.contains(re"(1{4}|2{4})"): return true
   # check for vertical winner
-  if rep.contains(re"(1.{6}){4}"): return true
-  if rep.contains(re"(.{6}1){4}"): return true
-  if rep.contains(re"(2.{6}){4}"): return true
-  if rep.contains(re"(.{6}2){4}"): return true
+  if rep.contains(re"((1.{6}){4}|(.{6}1){4}|(2.{6}){4}|(.{6}2){4})"): return true
   # check for diagonal \ winner
-  if rep.contains(re"(1.{7}){4}"): return true
-  if rep.contains(re"(.{7}1){4}"): return true
-  if rep.contains(re"(2.{7}){4}"): return true
-  if rep.contains(re"(.{7}2){4}"): return true
+  if rep.contains(re"((1.{7}){4}|(.{7}1){4}|(2.{7}){4}|(.{7}2){4})"): return true
   # check for diagonal / winner
-  if rep.contains(re"(1.{5}){4}"): return true
-  if rep.contains(re"(.{5}1){4}"): return true
-  if rep.contains(re"(2.{5}){4}"): return true
-  if rep.contains(re"(.{5}2){4}"): return true
+  if rep.contains(re"((1.{5}){4}|(.{5}1){4}|(2.{5}){4}|(.{5}2){4})"): return true
   return false
 
 proc getCol(p: string): uint =
