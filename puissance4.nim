@@ -2,16 +2,16 @@ import os  ## shellcmd
 import nre  ## reg.contains
 import strutils  ## str.contains
 
-const length* = 7 ## column length
+const length = 7 ## column length
 
 type
-  Column* = object ## Column data structure
+  Column = object ## Column data structure
     free: uint
     content: array[length, string]
-  Board* = array[length, Column] ## Board data structure
+  Board = array[length, Column] ## Board data structure
 
-let p1* = "\e[31mO\e[0m" ## Player 1's icon (red)
-let p2* = "\e[36mO\e[0m" ## Player 2's icon (blue)
+let p1 = "\e[31mO\e[0m" ## Player 1's icon (red)
+let p2 = "\e[36mO\e[0m" ## Player 2's icon (blue)
 
 template clear() =
   ## clear the screen using
@@ -19,14 +19,14 @@ template clear() =
   if defined(windows): discard execShellCmd("cls")
   discard execShellCmd("clear")
 
-proc initBoard*(): Board = 
+proc initBoard(): Board = 
   ## set all the case of the board to a '.'
   for column in result.mitems:
     column.free = length
     for c in column.content.mitems:
       c = "."
 
-proc show*(b: Board) =
+proc show(b: Board) =
   ## show the formatted board
   ## to the screen
   clear()
@@ -37,7 +37,7 @@ proc show*(b: Board) =
     echo ""
   echo "-1-2-3-4-5-6-7-"
 
-proc add*(column: uint, player: string, board: var Board): bool =
+proc add(column: uint, player: string, board: var Board): bool =
   ## add player to the column if possible
   var 
     col = addr board[column-1]
@@ -47,7 +47,7 @@ proc add*(column: uint, player: string, board: var Board): bool =
   col.free -= 1
   return true
 
-proc to_string*(b: Board): string =
+proc to_string(b: Board): string =
   ## convert the board to a one line string
   var rep: string
   for i in countup(0, length-1):
@@ -58,7 +58,7 @@ proc to_string*(b: Board): string =
       if c == p2: rep = rep & "2"
   return rep
 
-proc checkWinner*(board: Board, round: uint): bool =
+proc checkWinner(board: Board, round: uint): bool =
   ## check for winner (horizontal, vertical, diagonal)
   if round == 7*7:
     defer: 
@@ -88,7 +88,7 @@ proc checkWinner*(board: Board, round: uint): bool =
   if rep.contains(re"(.{5}2){4}"): return true
   return false
 
-proc getCol*(p: string): uint =
+proc getCol(p: string): uint =
   ## ask user for a column
   ## between 1 and 7
   var column: uint = 0
